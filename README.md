@@ -1,5 +1,5 @@
 
-# RealVLG-R1: A Large-Scale Real-World Visual-Language Grounding Benchmark
+# RealVLG-R1: A Large-Scale Real-World Visual-Language Grounding Benchmark for Robotic Perception and Manipulation
 
 ## 🌟 Overview
 
