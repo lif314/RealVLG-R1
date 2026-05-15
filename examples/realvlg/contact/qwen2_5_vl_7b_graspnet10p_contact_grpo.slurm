@@ -13,7 +13,7 @@ mkdir -p slurm_logs
 
 source /share/home/u11124/miniconda3/etc/profile.d/conda.sh
 module load gcc/11.4.0
-conda activate easygrasp
+conda activate realvlgr1
 
 export PYTHONUNBUFFERED=1
 export RAY_DISABLE_DASHBOARD=1

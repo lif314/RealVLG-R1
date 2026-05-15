@@ -114,6 +114,11 @@ For more detailed data loading, please refer to `metadata_viewer.py`.
 bash examples/realvlg/bbox/qwen2_5_vl_3b_graspnet10p_bbox_grpo.slurm
 
 # Seg
+# First, download the SAM2 model into `./third_party/sam2/checkpoints/sam2.1_hiera_large.pt`.
+mkdir ./third_party/sam2/checkpoints/
+cd ./third_party/sam2/checkpoints/
+wget https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_large.pt
+
 bash examples/realvlg/bbox_sam2/qwen2_5_vl_3b_graspnet10p_SAM_grpo.slurm
 
 # Grasp

@@ -12,20 +12,11 @@ class SAMWrapper:
         self.predictor = SAM2ImagePredictor(self.model)
 
     def set_image(self, image):
-        """
-        设置输入图像，可以是:
-        - 图像路径 (str)
-        - numpy 数组 (H, W, 3)
-        - PIL Image 对象
-        """
         if isinstance(image, str):
-            # 输入为路径
             rgb_image = np.array(Image.open(image).convert("RGB"), dtype=np.uint8)
         elif isinstance(image, Image.Image):
-            # 输入为 PIL 图像
             rgb_image = np.array(image.convert("RGB"), dtype=np.uint8)
         elif isinstance(image, np.ndarray):
-            # 输入为 numpy 数组
             if image.dtype != np.uint8:
                 image = (np.clip(image, 0, 1) * 255).astype(np.uint8)
             rgb_image = image
@@ -35,7 +26,6 @@ class SAMWrapper:
         self.predictor.set_image(rgb_image)
 
     def predict(self, bbox: list, multimask_output=False):
-        """基于已设置的图像和输入 bbox 执行预测"""
         mask_pred, score, _ = self.predictor.predict(
             box=np.array([bbox], dtype=np.float32),
             multimask_output=multimask_output
