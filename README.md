@@ -133,24 +133,23 @@ bash examples/realvlg/contact/qwen2_5_vl_3b_graspnet10p_contact_grpo.slurm
 > ```
 
 ### Evaluation
-- bbox
+- Bbox
 ```bash
-model_path=outputs/RealVLG_Benchmark/done_gspo_RealVLG_GraspNet10P_Bbox_7B_GSPO/global_step_180/actor/huggingface
-data_root="/share/home/u11124/ssd_datahome/llf_data/GraspNet_VLG"
-output_dir="./outputs/evaluation/bbox/RealVLG-GSPO-7B"
+model_path=path/to/model/huggingface
+data_root="path/to/GraspNet_VLG"
+output_dir="./outputs/evaluation/bbox"
 python3 evaluation/eval_bbox.py \
     --model_path=$model_path \
     --data_root=$data_root \
     --output_dir=$output_dir
 ```
 
-- seg
+- Bbox+SAM2
 ```bash
-data_root="/share/home/u11124/ssd_datahome/llf_data/GraspNet_VLG"
 sam_path="./third_party/sam2/checkpoints/sam2.1_hiera_large.pt"
-# model_path="/share/home/u11124/data_10t/llf_data/vlm_models/Qwen2.5-VL-3B-Instruct"
-model_path=outputs/RealVLG_Benchmark/done_grpo_RealVLG_GraspNet10P_Bbox_3B/global_step_220/actor/huggingface
-output_dir="./outputs/evaluation/sam/RealVLG-GRPO-3B"
+model_path=path/to/model/huggingface
+data_root="path/to/GraspNet_VLG"
+output_dir="./outputs/evaluation/sam"
 python3 evaluation/eval_sam.py \
     --model_path=$model_path \
     --sam_model_path=$sam_path \
@@ -158,11 +157,11 @@ python3 evaluation/eval_sam.py \
     --output_dir=$output_dir
 ```
 
-- grasp
+- Grasp
 ```bash
-model_path=outputs/RealVLG_Benchmark/done_grpo_RealVLG_GraspNet10P_Grasp_7B/global_step_120/actor/huggingface
-data_root="/share/home/u11124/ssd_datahome/llf_data/GraspNet_VLG"
-output_dir="./outputs/evaluation/grasp/RealVLG-R1-GRPO-7B"
+model_path=path/to/model/huggingface
+data_root="path/to/GraspNet_VLG"
+output_dir="./outputs/evaluation/grasp"
 python3 evaluation/eval_grasp.py \
     --model_path=$model_path \
     --data_root=$data_root \
@@ -171,9 +170,9 @@ python3 evaluation/eval_grasp.py \
 
 - Contact
 ```bash
-model_path="/share/home/u11124/data_10t/llf_data/vlm_models/Qwen2.5-VL-3B-Instruct"
-data_root="/share/home/u11124/ssd_datahome/llf_data/GraspNet_VLG"
-output_dir="./outputs/evaluation/contact/qwen3b"
+model_path=path/to/model/huggingface
+data_root="path/to/GraspNet_VLG"
+output_dir="./outputs/evaluation/contact"
 python3 evaluation/eval_contact.py \
     --model_path=$model_path \
     --data_root=$data_root \
