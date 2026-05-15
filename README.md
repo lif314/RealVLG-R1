@@ -1,292 +1,131 @@
+<p align="center">
+  <h1 align="center">
+    RealVLG-R1: A Large-Scale Real-World Visual-Language Grounding Benchmark for Robotic Perception and Manipulation
+    <br>
+    [CVPR 2026]
+  </h1>
+  <p align="center">
+  <a href="https://lif314.github.io/"><strong>Linfei Li</strong></a>
+  ·
+  <a href="https://scholar.google.com/citations?user=8VOk_S4AAAAJ&hl=en"><strong>Lin Zhang*</strong></a>
+  ·
+  <a href="https://scholar.google.com/citations?user=A0N_mS0AAAAJ&hl=en"><strong>Ying Shen</strong></a>
+</p>
 
-# RealVLG-R1: A Large-Scale Real-World Visual-Language Grounding Benchmark for Robotic Perception and Manipulation
+  <h3 align="center"><a href="https://lif314.github.io/projects/realvlg_r1/">🌐Project page</a> 
+  | <a href="https://cvpr.thecvf.com/virtual/2026/poster/36174">📝Paper(CVF)</a> | <a href="https://arxiv.org/abs/2603.14880">📝Paper(arXiv)</a>
+  </h3>
+  <div align="center"></div>
+</p>
 
-## 🌟 Overview
+<p align="left">
+  <a href="">
+    <img src="./assets/teaser.png" alt="teaser" width="100%">
+  </a>
+</p>
 
-**RealVLG** is a unified framework designed to bridge the gap between natural language and robotic grasping. It features a massive dataset and an end-to-end model capable of performing zero-shot manipulation in real-world environments.
+<!-- TABLE OF CONTENTS -->
+<details open="open" style='padding: 10px; border-radius:5px 30px 30px 5px; border-style: solid; border-width: 1px;'>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#installation">Installation</a>
+    </li>
+    <li>
+      <a href="#datasets">Datasets</a>
+    </li>
+    <li>
+      <a href="#benchmarking">Benchmarking</a>
+    </li>
+    <li>
+      <a href="#acknowledgement">Acknowledgement</a>
+    </li>
+    <li>
+      <a href="#citation">Citation</a>
+    </li>
+  </ol>
+</details>
 
-### Key Components:
-
-* **RealVLG-11B Dataset:** 165,000 images with 11 billion grasping examples.
-* **RealVLG-R1 Model:** A Large Vision-Language Model (VLM) optimized via Reinforcement Fine-tuning.
-* **Multi-Task Output:** Predicts Bounding Boxes, Segmentation Masks, Grasp Poses, and Contact Points from text instructions.
-
----
-
-## 🛠️ Installation
-
-```bash
-# Clone the repo
-git clone https://github.com/Username/RealVLG.git
-cd RealVLG
-
-# Install dependencies
-pip install -r requirements.txt
-
-```
-
----
-
-## 🚀 Quick Start
-
-```python
-import realvlg
-
-# Load the R1 model
-model = realvlg.load_model("RealVLG-R1")
-
-# Run inference
-instruction = "Grasp the handle of the red mug"
-outputs = model.predict(image="table_scene.jpg", text=instruction)
-
-# Show results
-print(f"Grasp Pose: {outputs.grasp_pose}")
-print(f"Contact Points: {outputs.contact_points}")
-
-```
-
----
-
-## 📝 Citation
-
-If you find our work useful, please cite:
-
-```bibtex
-@inproceedings{li2026realvlg,
-  title={RealVLG-R1: A Large-Scale Real-World Visual-Language Grounding Benchmark for Robotic Perception and Manipulation},
-  author={Li, Linfei and Zhang, Lin and Shen, Ying},
-  booktitle={CVPR},
-  year={2026}
-}
-
-```
-
----
-## Features
-
-- Supported models
-  - Llama3/Qwen2/Qwen2.5/Qwen3 language models
-  - Qwen2-VL/Qwen2.5-VL/Qwen3-VL vision language models
-  - DeepSeek-R1 distill models
-
-- Supported algorithms
-  - GRPO
-  - DAPO ![new](https://img.shields.io/badge/new-orange)
-  - Reinforce++
-  - ReMax
-  - RLOO
-  - GSPO ![new](https://img.shields.io/badge/new-orange)
-  - CISPO ![new](https://img.shields.io/badge/new-orange)
-
-- Supported datasets
-  - Any text, vision-text dataset in a [specific format](#custom-dataset)
-
-- Supported tricks
-  - Padding-free training
-  - Resuming from the latest/best checkpoint
-  - Wandb & SwanLab & Mlflow & Tensorboard tracking
-
-## Requirements
-
-### Software Requirements
-
-- Python 3.9+
-- transformers>=4.54.0
-- flash-attn>=2.4.3
-- vllm>=0.8.3
-
-We provide a [Dockerfile](./Dockerfile) to easily build environments.
-
-We recommend using the [pre-built docker image](https://hub.docker.com/r/hiyouga/verl) in EasyR1.
+## Installation
+> **Note**: If you encounter version issues during the installation process, please refer to [EasyR1](https://github.com/hiyouga/EasyR1) and [veRL](https://github.com/verl-project/verl). For tested environments, please refer to [install.sh](./install.sh).
 
 ```bash
-docker pull hiyouga/verl:ngc-th2.8.0-cu12.9-vllm0.11.0
-docker run -it --ipc=host --gpus=all hiyouga/verl:ngc-th2.8.0-cu12.9-vllm0.11.0
-```
+conda create -n realvlgr1 python==3.10
+conda activate realvlgr1
 
-If your environment does not support Docker, you can consider using **Apptainer**:
+git clone git@github.com:lif314/RealVLG-R1.git
+cd RealVLG-R1
 
-```bash
-apptainer pull easyr1.sif docker://hiyouga/verl:ngc-th2.8.0-cu12.9-vllm0.11.0
-apptainer shell --nv --cleanenv --bind /mnt/your_dir:/mnt/your_dir easyr1.sif
-```
-
-Use `USE_MODELSCOPE_HUB=1` to download models from the ModelScope hub.
-
-### Hardware Requirements
-
-\* *estimated*
-
-| Method                   | Bits |  1.5B  |   3B   |   7B   |   32B   |   72B   |
-| ------------------------ | ---- | ------ | ------ | ------ | ------- | ------- |
-| GRPO Full Fine-Tuning    |  AMP | 2*24GB | 4*40GB | 8*40GB | 16*80GB | 32*80GB |
-| GRPO Full Fine-Tuning    | BF16 | 1*24GB | 1*40GB | 4*40GB |  8*80GB | 16*80GB |
-
-> [!NOTE]
-> Use `worker.actor.fsdp.torch_dtype=bf16` and `worker.actor.optim.strategy=adamw_bf16` to enable bf16 training.
->
-> We are working hard to reduce the VRAM in RL training, LoRA support will be integrated in next updates.
-
-## Tutorial: Run Qwen2.5-VL GRPO on [Geometry3K](https://huggingface.co/datasets/hiyouga/geometry3k) Dataset in Just 3 Steps
-
-![image](assets/qwen2_5_vl_7b_geo.png)
-
-### Installation
-
-```bash
-git clone https://github.com/hiyouga/EasyR1.git
-cd EasyR1
 pip install -e .
 ```
 
-### GRPO Training
+## Datasets
+You can download the relevant datasets from [ModelScope RealVLG-11B](https://modelscope.cn/datasets/cslinfeili/RealVLG-11B).
 
-```bash
-bash examples/qwen2_5_vl_7b_geo3k_grpo.sh
+Each data sample is annotated as follows:
+```json
+[
+  {
+    "image_name": "",
+    "image_path": "",
+    "object_id": "",
+    "mask_path": "",
+    "description": "",
+    "label": "", # short description
+    "bbox": [x1, y1, x2, y2],
+    "grasps": [
+      [x0,y0,x1,y1,x2,y2,x3,y3],
+      ...
+    ],
+    "contact_points": [
+    [x1,y1, x2, y2],
+    ...
+    ]
+  }
+]
 ```
 
-### Merge Checkpoint in Hugging Face Format
+The definition diagrams of bbox and grasp are shown in the figure below:
+![](./assets/anno_demo.png)
 
-```bash
-python3 scripts/model_merger.py --local_dir checkpoints/easy_r1/exp_name/global_step_1/actor
-```
+### Usage
 
-> [!TIP]
-> If you encounter issues with connecting to Hugging Face, consider using `export HF_ENDPOINT=https://hf-mirror.com`.
->
-> If you want to use SwanLab logger, consider using `bash examples/qwen2_5_vl_7b_geo3k_swanlab.sh`.
+Download the dataset and extract `xxx_VLG.zip`. In each `xxx_VLG` folder, run `python metadata_viewer.py` to view the data formatting. The left/right keys switch between different objects in the same image, and the up/down keys switch between images. The visualization of different data subsets is shown below:
 
-## Custom Dataset
+| Subdata | Cornell_VLG | VMRD_VLG | OCID_VLG | GraspNet_VLG | Jacquard_VLG |
+|---------|-------------|----------|----------|--------------|---------------|
+| Demo    | ![](./assets/cornell.png) | ![](./assets/vmrd.png) | ![](./assets/ocid.png) | ![](./assets/graspnet.png) | ![](./assets/jacquard.png) |
 
-Please refer to the example datasets to prepare your own dataset.
+For more detailed data loading, please refer to `metadata_viewer.py`.
 
-- Text dataset: https://huggingface.co/datasets/hiyouga/math12k
-- Image-text dataset: https://huggingface.co/datasets/hiyouga/geometry3k
-- Multi-image-text dataset: https://huggingface.co/datasets/hiyouga/journeybench-multi-image-vqa
-- Text-image mixed dataset: https://huggingface.co/datasets/hiyouga/rl-mixed-dataset
+> Note: ``Jacquard_VLG`` is a simulated dataset not discussed in the paper. Its language annotations are derived from ShapeNetSem category labels.
 
-## How to Understand GRPO in EasyR1
+## Benchmarking
+- TODO
 
-![image](assets/easyr1_grpo.png)
+## Acknowledgement
+We thank the authors of the following repositories for their open-source code:
+- [Qwen2.5-VL](https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct)
+- [VeRL](https://github.com/verl-project/verl)
+- [EasyR1](https://github.com/hiyouga/easyr1)
 
-- To learn about the GRPO algorithm, you can refer to [Hugging Face's blog](https://huggingface.co/docs/trl/v0.16.1/en/grpo_trainer).
+If you use this dataset, please cite the relevant work and comply with their licenses.
+- [Cornell](https://www.kaggle.com/datasets/oneoneliu/cornell-grasp)
+- [VMRD](https://opendatalab.com/OpenDataLab/VMRD)
+- [OCID-Grasp](https://github.com/stefan-ainetter/grasp_det_seg_cnn)
+- [GraspNet](https://graspnet.net/)
+- [Jacquard](https://jacquard.liris.cnrs.fr/)
 
-## How to Run 70B+ Model in Multi-node Environment
-
-1. Start the Ray head node.
-
-```bash
-ray start --head --port=6379 --dashboard-host=0.0.0.0
-```
-
-2. Start the Ray worker node and connect to the head node.
-
-```bash
-ray start --address=<head_node_ip>:6379
-```
-
-3. Check the Ray resource pool.
-
-```bash
-ray status
-```
-
-4. Run training script on the Ray head node only.
-
-```bash
-bash examples/qwen2_5_vl_7b_geo3k_grpo.sh
-```
-
-See the **[veRL's official doc](https://verl.readthedocs.io/en/latest/start/multinode.html)** for more details about multi-node training and Ray debugger.
-
-## Other Baselines
-
-We also reproduced the following two baselines of the [R1-V](https://github.com/deep-agent/R1-V) project.
-- [CLEVR-70k-Counting](examples/baselines/qwen2_5_vl_3b_clevr.sh): Train the Qwen2.5-VL-3B-Instruct model on counting problem.
-- [GeoQA-8k](examples/baselines/qwen2_5_vl_3b_geoqa8k.sh): Train the Qwen2.5-VL-3B-Instruct model on GeoQA problem.
-
-## Performance Baselines
-
-See [baselines.md](assets/baselines.md).
-
-## Awesome Work using EasyR1
-
-- **MMR1**: Enhancing Multimodal Reasoning with Variance-Aware Sampling and Open Resources. [![[code]](https://img.shields.io/github/stars/LengSicong/MMR1)](https://github.com/LengSicong/MMR1) [![[arxiv]](https://img.shields.io/badge/arxiv-2509.21268-blue)](https://arxiv.org/abs/2509.21268)
-- **Vision-R1**: Incentivizing Reasoning Capability in Multimodal Large Language Models. [![[code]](https://img.shields.io/github/stars/Osilly/Vision-R1)](https://github.com/Osilly/Vision-R1) [![[arxiv]](https://img.shields.io/badge/arxiv-2503.06749-blue)](https://arxiv.org/abs/2503.06749)
-- **Seg-Zero**: Reasoning-Chain Guided Segmentation via Cognitive Reinforcement. [![[code]](https://img.shields.io/github/stars/dvlab-research/Seg-Zero)](https://github.com/dvlab-research/Seg-Zero) [![[arxiv]](https://img.shields.io/badge/arxiv-2503.06520-blue)](https://arxiv.org/abs/2503.06520)
-- **MetaSpatial**: Reinforcing 3D Spatial Reasoning in VLMs for the Metaverse. [![[code]](https://img.shields.io/github/stars/PzySeere/MetaSpatial)](https://github.com/PzySeere/MetaSpatial) [![[arxiv]](https://img.shields.io/badge/arxiv-2503.18470-blue)](https://arxiv.org/abs/2503.18470)
-- **Temporal-R1**: Envolving Temporal Reasoning Capability into LMMs via Temporal Consistent Reward. [![[code]](https://img.shields.io/github/stars/appletea233/Temporal-R1)](https://github.com/appletea233/Temporal-R1)
-- **NoisyRollout**: Reinforcing Visual Reasoning with Data Augmentation. [![[code]](https://img.shields.io/github/stars/John-AI-Lab/NoisyRollout)](https://github.com/John-AI-Lab/NoisyRollout) [![[arxiv]](https://img.shields.io/badge/arxiv-2504.13055-blue)](https://arxiv.org/pdf/2504.13055)
-- **GUI-R1**: A Generalist R1-Style Vision-Language Action Model For GUI Agents. [![[code]](https://img.shields.io/github/stars/ritzz-ai/GUI-R1)](https://github.com/ritzz-ai/GUI-R1) [![[arxiv]](https://img.shields.io/badge/arxiv-2504.10458-blue)](https://arxiv.org/abs/2504.10458)
-- **R1-Track**: Direct Application of MLLMs to Visual Object Tracking via Reinforcement Learning. [![[code]](https://img.shields.io/github/stars/Wangbiao2/R1-Track)](https://github.com/Wangbiao2/R1-Track)
-- **VisionReasoner**: Unified Visual Perception and Reasoning via Reinforcement Learning. [![[code]](https://img.shields.io/github/stars/dvlab-research/VisionReasoner)](https://github.com/dvlab-research/VisionReasoner) [![[arxiv]](https://img.shields.io/badge/arxiv-2505.12081-blue)](https://arxiv.org/abs/2505.12081)
-- **MM-UPT**: Unsupervised Post-Training for Multi-Modal LLM Reasoning via GRPO. [![[code]](https://img.shields.io/github/stars/waltonfuture/MM-UPT)](https://github.com/waltonfuture/MM-UPT) [![[arxiv]](https://img.shields.io/badge/arxiv-2505.22453-blue)](https://arxiv.org/pdf/2505.22453)
-- **RL-with-Cold-Start**: Advancing Multimodal Reasoning via Reinforcement Learning with Cold Start. [![[code]](https://img.shields.io/github/stars/waltonfuture/RL-with-Cold-Start)](https://github.com/waltonfuture/RL-with-Cold-Start) [![[arxiv]](https://img.shields.io/badge/arxiv-2505.22334-blue)](https://arxiv.org/pdf/2505.22334)
-- **ViGoRL**: Grounded Reinforcement Learning for Visual Reasoning. [![[code]](https://img.shields.io/github/stars/Gabesarch/grounded-rl)](https://github.com/Gabesarch/grounded-rl) [![[arxiv]](https://img.shields.io/badge/arxiv-2505.22334-blue)](https://arxiv.org/abs/2505.23678)
-- **Revisual-R1**: Advancing Multimodal Reasoning: From Optimized Cold Start to Staged Reinforcement Learning. [![[code]](https://img.shields.io/github/stars/CSfufu/Revisual-R1)](https://github.com/CSfufu/Revisual-R1) [![[arxiv]](https://img.shields.io/badge/arxiv-2506.04207-blue)](https://arxiv.org/abs/2506.04207)
-- **SophiaVL-R1**: Reinforcing MLLMs Reasoning with Thinking Reward. [![[code]](https://img.shields.io/github/stars/kxfan2002/SophiaVL-R1)](https://github.com/kxfan2002/SophiaVL-R1) [![[arxiv]](https://img.shields.io/badge/arxiv-2505.17018-blue)](https://arxiv.org/abs/2505.17018)
-- **Vision-Matters**: Simple Visual Perturbations Can Boost Multimodal Math Reasoning. [![[code]](https://img.shields.io/github/stars/YutingLi0606/Vision-Matters)](https://github.com/YutingLi0606/Vision-Matters) [![[arxiv]](https://img.shields.io/badge/arxiv-2506.09736-blue)](https://arxiv.org/abs/2506.09736)
-- **VTool-R1**: VLMs Learn to Think with Images via Reinforcement Learning on Multimodal Tool Use. [![[code]](https://img.shields.io/github/stars/VTOOL-R1/vtool-r1)](https://github.com/VTOOL-R1/vtool-r1) [![[arxiv]](https://img.shields.io/badge/arxiv-2505.19255-blue)](https://arxiv.org/abs/2505.19255)
-- **Long-RL**: Scaling RL to Long Sequences. [![[code]](https://img.shields.io/github/stars/NVlabs/Long-RL)](https://github.com/NVlabs/Long-RL) [![[arxiv]](https://img.shields.io/badge/arxiv-2507.07966-blue)](https://arxiv.org/abs/2507.07966)
-- **EditGRPO**: Reinforcement Learning with Post-Rollout Edits for Clinically Accurate Chest X-Ray Report Generation. [![[code]](https://img.shields.io/github/stars/taokz/EditGRPO)](https://github.com/taokz/EditGRPO)
-- **ARES**: Multimodal Adaptive Reasoning via Difficulty-Aware Token-Level Entropy Shaping. [![[code]](https://img.shields.io/github/stars/shawn0728/ARES)](https://github.com/shawn0728/ARES) [![[arxiv]](https://img.shields.io/badge/arxiv-2510.08457-blue)](https://arxiv.org/abs/2510.08457)
-- **VPPO**: Spotlight on Token Perception for Multimodal Reinforcement Learning. [![[code]](https://img.shields.io/github/stars/huaixuheqing/VPPO-RL)](https://github.com/huaixuheqing/VPPO-RL) [![[arxiv]](https://img.shields.io/badge/arxiv-2510.09285-blue)](https://arxiv.org/abs/2510.09285)
-
-## TODO
-
-- Support LoRA (high priority).
-- Support ulysses parallelism for VLMs (middle priority).
-- Support more VLM architectures.
-
-> [!NOTE]
-> We will not provide scripts for supervised fine-tuning and inference in this project. If you have such requirements, we recommend using [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory).
-
-### Known bugs
-
-These features are temporarily disabled for now, we plan to fix them one-by-one in the future updates.
-
-- Vision language models are not compatible with ulysses parallelism yet.
-
-## Discussion Group
-
-👋 Join our [WeChat group](https://github.com/hiyouga/llamafactory-community/blob/main/wechat/easyr1.jpg).
-
-## FAQs
-
-> ValueError: Image features and image tokens do not match: tokens: 8192, features 9800
-
-Increase the `data.max_prompt_length` or reduce the `data.max_pixels`.
-
-> RuntimeError: CUDA Error: out of memory at /workspace/csrc/cumem_allocator.cpp:62
-
-Reduce the `worker.rollout.gpu_memory_utilization` and enable `worker.actor.offload.offload_params`.
-
-> RuntimeError: 0 active drivers ([]). There should only be one.
-
-Uninstall `deepspeed` from the current python environment.
 
 ## Citation
 
-Core contributors: [Yaowei Zheng](https://github.com/hiyouga), [Junting Lu](https://github.com/AL-377), [Shenzhi Wang](https://github.com/Shenzhi-Wang), [Zhangchi Feng](https://github.com/BUAADreamer), [Dongdong Kuang](https://github.com/Kuangdd01) and Yuwen Xiong
-
-We also thank Guangming Sheng and Chi Zhang for helpful discussions.
+If you find our paper and code useful for your research, please use the following BibTeX entry.
 
 ```bibtex
-@misc{zheng2025easyr1,
-  title        = {EasyR1: An Efficient, Scalable, Multi-Modality RL Training Framework},
-  author       = {Yaowei Zheng, Junting Lu, Shenzhi Wang, Zhangchi Feng, Dongdong Kuang, Yuwen Xiong},
-  howpublished = {\url{https://github.com/hiyouga/EasyR1}},
-  year         = {2025}
-}
-```
-
-We recommend to also cite the original work.
-
-```bibtex
-@article{sheng2024hybridflow,
-  title   = {HybridFlow: A Flexible and Efficient RLHF Framework},
-  author  = {Guangming Sheng and Chi Zhang and Zilingfeng Ye and Xibin Wu and Wang Zhang and Ru Zhang and Yanghua Peng and Haibin Lin and Chuan Wu},
-  year    = {2024},
-  journal = {arXiv preprint arXiv: 2409.19256}
+@inproceedings{li2026realvlgr1,
+  title     = {RealVLG-R1: A Large-Scale Real-World Visual-Language Grounding Benchmark for Robotic Perception and Manipulation},
+  author    = {Li, Linfei and Zhang, Lin and Shen, Ying},
+  booktitle = {CVPR},
+  year      = {2026},
 }
 ```

@@ -18,3 +18,4 @@ torchdata
 transformers>=4.54.0,<=4.57.0
 vllm>=0.8.0
 wandb
+shapely
