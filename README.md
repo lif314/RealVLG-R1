@@ -38,6 +38,9 @@
       <a href="#benchmarking">Benchmarking</a>
     </li>
     <li>
+      <a href="#inference">Inference</a>
+    </li>
+    <li>
       <a href="#acknowledgement">Acknowledgement</a>
     </li>
     <li>
@@ -86,7 +89,11 @@ Each data sample is annotated as follows:
 ```
 
 The definition diagrams of bbox and grasp are shown in the figure below:
-![](./assets/anno_demo.png)
+<p align="center">
+  <a href="">
+    <img src="./assets/anno_demo.png" alt="anno" width="60%">
+  </a>
+</p>
 
 ### Usage
 
@@ -101,7 +108,104 @@ For more detailed data loading, please refer to `metadata_viewer.py`.
 > Note: ``Jacquard_VLG`` is a simulated dataset not discussed in the paper. Its language annotations are derived from ShapeNetSem category labels.
 
 ## Benchmarking
-- TODO
+### Training
+```bash
+# Bbox
+bash train_scripts/realvlg/bbox/qwen2_5_vl_3b_graspnet10p_bbox_grpo.slurm
+
+# Seg
+bash train_scripts/realvlg/bbox_sam2/qwen2_5_vl_3b_graspnet10p_SAM_grpo.slurm
+
+# Grasp
+bash train_scripts/realvlg/grasp/qwen2_5_vl_3b_graspnet10p_Grasp_grpo.slurm
+
+# Contact
+bash train_scripts/realvlg/contact/qwen2_5_vl_3b_graspnet10p_contact_grpo.slurm
+```
+> Convert to Hugging Face model
+> ```bash
+> python3 scripts/model_merger.py --local_dir path/to/the/model
+> ```
+
+### Evaluation
+- bbox
+```bash
+model_path=outputs/RealVLG_Benchmark/done_gspo_RealVLG_GraspNet10P_Bbox_7B_GSPO/global_step_180/actor/huggingface
+data_root="/share/home/u11124/ssd_datahome/llf_data/GraspNet_VLG"
+output_dir="./outputs/evaluation/bbox/RealVLG-GSPO-7B"
+python3 evaluation/eval_bbox.py \
+    --model_path=$model_path \
+    --data_root=$data_root \
+    --output_dir=$output_dir
+```
+
+- seg
+```bash
+data_root="/share/home/u11124/ssd_datahome/llf_data/GraspNet_VLG"
+sam_path="./third_party/sam2/checkpoints/sam2.1_hiera_large.pt"
+# model_path="/share/home/u11124/data_10t/llf_data/vlm_models/Qwen2.5-VL-3B-Instruct"
+model_path=outputs/RealVLG_Benchmark/done_grpo_RealVLG_GraspNet10P_Bbox_3B/global_step_220/actor/huggingface
+output_dir="./outputs/evaluation/sam/RealVLG-GRPO-3B"
+python3 evaluation/eval_sam.py \
+    --model_path=$model_path \
+    --sam_model_path=$sam_path \
+    --data_root=$data_root \
+    --output_dir=$output_dir
+```
+
+- grasp
+```bash
+model_path=outputs/RealVLG_Benchmark/done_grpo_RealVLG_GraspNet10P_Grasp_7B/global_step_120/actor/huggingface
+data_root="/share/home/u11124/ssd_datahome/llf_data/GraspNet_VLG"
+output_dir="./outputs/evaluation/grasp/RealVLG-R1-GRPO-7B"
+python3 evaluation/eval_grasp.py \
+    --model_path=$model_path \
+    --data_root=$data_root \
+    --output_dir=$output_dir
+```
+
+- Contact
+```bash
+model_path="/share/home/u11124/data_10t/llf_data/vlm_models/Qwen2.5-VL-3B-Instruct"
+data_root="/share/home/u11124/ssd_datahome/llf_data/GraspNet_VLG"
+output_dir="./outputs/evaluation/contact/qwen3b"
+python3 evaluation/eval_contact.py \
+    --model_path=$model_path \
+    --data_root=$data_root \
+    --output_dir=$output_dir
+```
+
+## Inference
+> TODO
+### Object Detection
+```bash
+git clone https://www.modelscope.cn/cslinfeili/RealVLG-R1_GSPO_Bbox_3B.git
+
+python infer_bbox.py
+```
+
+
+### Semantic Segmentation
+```bash
+git clone https://www.modelscope.cn/cslinfeili/RealVLG-R1_GSPO_Bbox_3B.git
+
+python infer_sam.py
+```
+
+### 4-DoF Grasping
+```bash
+git clone https://www.modelscope.cn/cslinfeili/RealVLG-R1_GRPO_Grasp_3B.git
+
+python infer_grasp.py
+```
+
+### Contact Point Prediction
+```bash
+git clone https://www.modelscope.cn/cslinfeili/RealVLG-R1_GRPO_Contact_3B.git
+
+python infer_contact.py
+```
+
 
 ## Acknowledgement
 We thank the authors of the following repositories for their open-source code:

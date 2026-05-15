@@ -9,7 +9,6 @@ import argparse
 from evaluation.dataset import GraspNetVLGDataset
 from evaluation.qwen_infer import Qwen2_5VL_Infer
 
-
 # ==========================================================
 # Convert (x, y, theta, width) → 8 corner points representation
 # ==========================================================
