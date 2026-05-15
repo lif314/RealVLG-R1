@@ -13,7 +13,7 @@
 </p>
 
   <h3 align="center"><a href="https://lif314.github.io/projects/realvlg_r1/">🌐Project page</a> 
-  | <a href="https://cvpr.thecvf.com/virtual/2026/poster/36174">📝Paper(CVF)</a> | <a href="https://arxiv.org/abs/2603.14880">📝Paper(arXiv)</a>
+  | <a href="https://modelscope.cn/datasets/cslinfeili/RealVLG-11B">📊Dataset</a> | <a href="https://cvpr.thecvf.com/virtual/2026/poster/36174">📝Paper(CVF)</a> | <a href="https://arxiv.org/abs/2603.14880">📝Paper(arXiv)</a>
   </h3>
   <div align="center"></div>
 </p>
