@@ -111,16 +111,16 @@ For more detailed data loading, please refer to `metadata_viewer.py`.
 ### Training
 ```bash
 # Bbox
-bash train_scripts/realvlg/bbox/qwen2_5_vl_3b_graspnet10p_bbox_grpo.slurm
+bash examples/realvlg/bbox/qwen2_5_vl_3b_graspnet10p_bbox_grpo.slurm
 
 # Seg
-bash train_scripts/realvlg/bbox_sam2/qwen2_5_vl_3b_graspnet10p_SAM_grpo.slurm
+bash examples/realvlg/bbox_sam2/qwen2_5_vl_3b_graspnet10p_SAM_grpo.slurm
 
 # Grasp
-bash train_scripts/realvlg/grasp/qwen2_5_vl_3b_graspnet10p_Grasp_grpo.slurm
+bash examples/realvlg/grasp/qwen2_5_vl_3b_graspnet10p_Grasp_grpo.slurm
 
 # Contact
-bash train_scripts/realvlg/contact/qwen2_5_vl_3b_graspnet10p_contact_grpo.slurm
+bash examples/realvlg/contact/qwen2_5_vl_3b_graspnet10p_contact_grpo.slurm
 ```
 > Convert to Hugging Face model
 > ```bash
